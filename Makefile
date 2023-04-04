@@ -1,5 +1,5 @@
 build : 
-	gcc main.c helper.c -o main
+	gcc main.c helper.c elf.c -o main
 
 test : build 
 	@./test/test.sh

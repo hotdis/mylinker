@@ -3,6 +3,7 @@
 int main(int argc, char **argv) {
 	FILE *fp;
     int retcode = 0;
+    struct elf_header hdr; struct elf_section sec; 
 
     if (argc < 2) { 
         fprintf(stderr, "lack of input files.\n");
@@ -20,6 +21,18 @@ int main(int argc, char **argv) {
         retcode = -1;
         goto end;
 	}
+	
+    //  
+    fseek(fp, 0, SEEK_SET);
+    elf_read_header(fp, &hdr);
+    printf("section headers starting at offset 0x%lx\n", hdr.sh_off);
+    fseek(fp, hdr.sh_off, SEEK_SET);
+    elf_read_section(fp, &sec);
+
+    int num_sec = hdr.sh_num;
+    if (!num_sec) 
+        num_sec = sec.size;
+    printf("number of section %d\n", num_sec);
 
 end:
 	fclose(fp);
